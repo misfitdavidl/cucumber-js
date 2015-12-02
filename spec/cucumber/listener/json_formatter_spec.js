@@ -3,11 +3,12 @@ require('../../support/spec_helper');
 
 describe("Cucumber.Listener.JsonFormatterWrapper", function () {
   var Cucumber = requireLib('cucumber');
+  var events = require('events');
   var listener, formatter;
 
   beforeEach(function () {
-    spyOn(process.stdout, 'write');
-    listener  = Cucumber.Listener.JsonFormatter(process.stdout);
+    suite = new events.EventEmitter();
+    listener = Cucumber.Listener.JsonFormatter(suite);
     formatter = listener.getGherkinFormatter();
     spyOn(formatter, 'uri');
     spyOn(formatter, 'feature');
