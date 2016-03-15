@@ -52,7 +52,7 @@ function Bundler(bundlePath) {
 
     browserify({debug: true, standalone: 'Cucumber'})
       .transform({global: true}, fixGherkinLexers)
-      .transform({global: true}, 'uglifyify')
+      //.transform({global: true}, 'uglifyify')
       .require(main, { expose: 'cucumber' })
       .bundle()
       .on('error', callback)
