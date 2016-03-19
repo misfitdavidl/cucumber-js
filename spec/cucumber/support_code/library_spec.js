@@ -2,10 +2,12 @@ require('../../support/spec_helper');
 
 describe("Cucumber.SupportCode.Library", function () {
   var Cucumber = requireLib('cucumber');
-  var library, rawSupportCode;
+  var callback, library, rawSupportCode, stackTracePromise;
+  var StackTrace = require('stacktrace-js');
 
   beforeEach(function () {
     rawSupportCode = createSpy("Raw support code");
+    spyOn(StackTrace, 'get').and.returnValue(stackTracePromise);
   });
 
   describe("constructor", function () {
@@ -13,7 +15,7 @@ describe("Cucumber.SupportCode.Library", function () {
       spyOn(Cucumber.SupportCode, 'AroundHook');
       spyOn(Cucumber.SupportCode, 'Hook');
       spyOn(Cucumber.SupportCode, 'StepDefinition');
-      library = Cucumber.SupportCode.Library(rawSupportCode);
+      library = Cucumber.SupportCode.Library(rawSupportCode, callback);
     });
 
     it("executes the raw support code", function () {

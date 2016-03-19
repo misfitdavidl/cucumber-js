@@ -14,7 +14,8 @@ describe("Cucumber.Runtime", function () {
       isDryRunRequested: isDryRunRequested,
       isFailFastRequested: isFailFastRequested,
       isStrictRequested: isStrictRequested,
-      shouldFilterStackTraces: true
+      shouldFilterStackTraces: true,
+      getSupportCodeLibrary: createSpy('get support code libray')
     });
     spyOn(Cucumber.Runtime.StackTraceFilter, 'filter');
     spyOn(Cucumber.Runtime.StackTraceFilter, 'unfilter');
@@ -30,7 +31,9 @@ describe("Cucumber.Runtime", function () {
       astTreeWalker      = createSpyWithStubs("AST tree walker", {walk: null});
       callback           = createSpy("callback");
       spyOn(runtime, 'getFeatures').and.returnValue(features);
-      spyOn(runtime, 'getSupportCodeLibrary').and.returnValue(supportCodeLibrary);
+      configuration.getSupportCodeLibrary.and.callFake(function(callback) {
+        callback(null, supportCodeLibrary)
+      });
       spyOn(Cucumber.Runtime, 'AstTreeWalker').and.returnValue(astTreeWalker);
     });
 
@@ -53,7 +56,7 @@ describe("Cucumber.Runtime", function () {
 
     it("gets the support code library", function () {
       runtime.start(callback);
-      expect(runtime.getSupportCodeLibrary).toHaveBeenCalled();
+      expect(configuration.getSupportCodeLibrary).toHaveBeenCalled();
     });
 
     it("creates a new AST tree walker", function () {
@@ -168,24 +171,6 @@ describe("Cucumber.Runtime", function () {
 
     it("returns the parsed features", function () {
       expect(runtime.getFeatures()).toBe(features);
-    });
-  });
-
-  describe("getSupportCodeLibrary", function () {
-    var supportCodeLibrary;
-
-    beforeEach(function () {
-      supportCodeLibrary = createSpy("support code library");
-      spyOnStub(configuration, 'getSupportCodeLibrary').and.returnValue(supportCodeLibrary);
-    });
-
-    it("gets the support code library from the configuration", function () {
-      runtime.getSupportCodeLibrary();
-      expect(configuration.getSupportCodeLibrary).toHaveBeenCalled();
-    });
-
-    it("returns the support code library", function () {
-      expect(runtime.getSupportCodeLibrary()).toBe(supportCodeLibrary);
     });
   });
 });

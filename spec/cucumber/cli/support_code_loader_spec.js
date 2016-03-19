@@ -18,25 +18,23 @@ describe("Cucumber.Cli.SupportCodeLoader", function () {
   });
 
   describe("getSupportCodeLibrary()", function () {
+    var callback;
     beforeEach(function () {
+      callback = createSpy("callback");
       supportCodeInitializer  = createSpy("support code initializer function");
       supportCodeLibrary      = createSpy("support code library");
       spyOn(supportCodeLoader, 'getSupportCodeInitializer').and.returnValue(supportCodeInitializer);
-      spyOn(Cucumber.SupportCode, 'Library').and.returnValue(supportCodeLibrary);
+      spyOn(Cucumber.SupportCode, 'Library')
     });
 
     it("gets the support code initializer function", function () {
-      supportCodeLoader.getSupportCodeLibrary();
+      supportCodeLoader.getSupportCodeLibrary(callback);
       expect(supportCodeLoader.getSupportCodeInitializer).toHaveBeenCalled();
     });
 
     it("creates a new support code library with the initializer", function () {
-      supportCodeLoader.getSupportCodeLibrary();
-      expect(Cucumber.SupportCode.Library).toHaveBeenCalledWith(supportCodeInitializer);
-    });
-
-    it("returns the support code library", function () {
-      expect(supportCodeLoader.getSupportCodeLibrary()).toBe(supportCodeLibrary);
+      supportCodeLoader.getSupportCodeLibrary(callback);
+      expect(Cucumber.SupportCode.Library).toHaveBeenCalledWith(supportCodeInitializer, callback);
     });
   });
 
