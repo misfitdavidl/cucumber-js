@@ -10,7 +10,9 @@ describe("Cucumber.VolatileConfiguration", function () {
 
   beforeEach(function () {
     supportCodeLibrary       = createSpy("support code library");
-    spyOn(Cucumber.SupportCode, 'Library').and.returnValue(supportCodeLibrary);
+    spyOn(Cucumber.SupportCode, 'Library').and.callFake(function(initializer, done) {
+      done(null, supportCodeLibrary);
+    });
     featureSources            = createSpy("feature source");
     supportCodeInitializer   = createSpy("support code initializer");
     configuration            = Cucumber.VolatileConfiguration(featureSources, supportCodeInitializer);
@@ -18,12 +20,6 @@ describe("Cucumber.VolatileConfiguration", function () {
   });
 
   itBehavesLikeAllCucumberConfigurations(context);
-
-  describe("constructor", function () {
-    it("creates a support code library with the initializer", function () {
-      expect(Cucumber.SupportCode.Library).toHaveBeenCalledWith(supportCodeInitializer);
-    });
-  });
 
   describe("getFeatureSources()", function () {
     describe("when a single feature source string is passed", function () {
@@ -71,8 +67,13 @@ describe("Cucumber.VolatileConfiguration", function () {
   });
 
   describe("getSupportCodeLibrary()", function () {
-    it("returns the support code library", function () {
-      expect(configuration.getSupportCodeLibrary()).toBe(supportCodeLibrary);
+    it("returns the support code library", function (done) {
+      configuration.getSupportCodeLibrary(function(error, value) {
+        expect(error).toBeNull();
+        expect(value).toBe(supportCodeLibrary);
+        expect(Cucumber.SupportCode.Library).toHaveBeenCalledWith(supportCodeInitializer, jasmine.any(Function));
+        done();
+      });
     });
   });
 

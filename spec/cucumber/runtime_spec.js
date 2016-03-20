@@ -32,7 +32,7 @@ describe("Cucumber.Runtime", function () {
       callback           = createSpy("callback");
       spyOn(runtime, 'getFeatures').and.returnValue(features);
       configuration.getSupportCodeLibrary.and.callFake(function(callback) {
-        callback(null, supportCodeLibrary)
+        callback(null, supportCodeLibrary);
       });
       spyOn(Cucumber.Runtime, 'AstTreeWalker').and.returnValue(astTreeWalker);
     });

@@ -24,7 +24,7 @@ describe("Cucumber.Cli.SupportCodeLoader", function () {
       supportCodeInitializer  = createSpy("support code initializer function");
       supportCodeLibrary      = createSpy("support code library");
       spyOn(supportCodeLoader, 'getSupportCodeInitializer').and.returnValue(supportCodeInitializer);
-      spyOn(Cucumber.SupportCode, 'Library')
+      spyOn(Cucumber.SupportCode, 'Library');
     });
 
     it("gets the support code initializer function", function () {
