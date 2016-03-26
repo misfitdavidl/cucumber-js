@@ -5,10 +5,9 @@
 [![Code Climate](https://codeclimate.com/github/cucumber/cucumber-js.svg)](https://codeclimate.com/github/cucumber/cucumber-js)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cucumber/cucumber-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*Cucumber*, the [popular Behaviour-Driven Development tool](https://cucumber.io), brought to your JavaScript stack.
-
-It runs on both Node.js (5, 4, 0.12, 0.10, and io.js) and *modern* web browsers.
-See an example of `cucumber-js` in your [browser](http://cucumber.github.io/cucumber-js/).
+[Cucumber](https://cucumber.io), the popular Behaviour-Driven Development tool,
+brought to your JavaScript stack. It runs on Node.js (5, 4, 0.12, 0.10, and io.js)
+and *modern* web browsers. See an example in your [browser](http://cucumber.github.io/cucumber-js/).
 
 ## Installation
 
@@ -16,7 +15,9 @@ See an example of `cucumber-js` in your [browser](http://cucumber.github.io/cucu
 $ npm install cucumber
 ```
 
-## Docs
+Or grab a copy from the [release](/release) directory
+
+## Documentation
 
 * [CLI](/docs/cli.md)
 * Support Files
