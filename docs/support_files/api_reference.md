@@ -7,6 +7,25 @@ called with a context that exposes the following methods:
 
 ---
 
+#### this.After([options,] code)
+
+Defines a hook which is run after each scenario.
+
+* `options` - object with the following keys
+  * `tags` - array of tags used to apply this hook to only specific scenarios
+  * `timeout` - hook specific timeout to override the default timeout
+* `code` - a javascript function. The first argument will be the current running scenario.
+  See [Cucumber.Api.Scenario](https://github.com/cucumber/cucumber-js/blob/master/lib/cucumber/api/scenario.js)
+  for more information. May optionally take an additional argument if using the asynchronous callback interface.
+
+---
+
+#### this.Before([options,] code)
+
+Defines a hook which is run before each scenario. Same interface as *this.After*.
+
+---
+
 #### this.defineStep([options,] pattern, code)
 
 Defines a step. *Aliases: this.Given, this.When, this.Then*
@@ -21,28 +40,27 @@ Defines a step. *Aliases: this.Given, this.When, this.Then*
 
 ---
 
+#### this.Given([options,] pattern, code)
+
+Alias of *this.defineStep*
+
+---
+
 #### this.setDefaultTimeout(milliseconds)
 
 Set the default timeout for asynchronous steps. Default is `5000` milliseconds.
 
 ---
 
-#### this.Before([options,] code)
+#### this.Then([options,] pattern, code)
 
-Defines a hook which is run before each scenario.
-
-* `options` - object with the following keys
-  * `tags` - array of tags used to apply this hook to only specific scenarios
-  * `timeout` - hook specific timeout to override the default timeout
-* `code` - a javascript function. The first argument will be the current running scenario.
-  See [Cucumber.Api.Scenario](https://github.com/cucumber/cucumber-js/blob/master/lib/cucumber/api/scenario.js)
-  for more information. May optionally take an additional argument if using the asynchronous callback interface.
+Alias of *this.defineStep*
 
 ---
 
-#### this.After([options,] code)
+#### this.When([options,] pattern, code)
 
-Defines a hook which is run after each scenario. Same interface as *this.Before*.
+Alias of *this.defineStep*
 
 ---
 
