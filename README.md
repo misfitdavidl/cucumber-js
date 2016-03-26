@@ -36,22 +36,22 @@ or run it locally by following these steps:
 
 Cucumber.js is available as an npm module.
 
-Install globally with:
-
 ``` shell
-$ npm install -g cucumber
+$ npm install cucumber
 ```
 
-Install as a development dependency of your application with:
+### Project Structure
 
-``` shell
-$ npm install --save-dev cucumber
-```
+* `features/**/*.feature` - [Gherkin](https://cucumber.io/docs/reference#gherkin) features
+* `features/**/*.js` - support files
 
+### Example
 
-### Features
+* Copy the file structure below
+* `$ npm install cucumber-js selenium-webdriver`
+* '$ node_modules/.bin/cucumber-js'
 
-Features are written with the [Gherkin syntax](https://github.com/cucumber/cucumber/wiki/Gherkin)
+Features are written in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)
 
 ``` gherkin
 # features/my_feature.feature
@@ -64,26 +64,30 @@ Feature: Example feature
   Scenario: Reading documentation
     Given I am on the Cucumber.js GitHub repository
     When I go to the README file
-    Then I should see "Usage" as the page title
+    Then I should see "cucumber-js/README.md" in the page title
 ```
 
-### Support files
+Each scenario creates a new *World* instance which will be exposed as `this` in
+the hooks and steps for that scenario. By default, this is an empty object but
+you can create a custom world.
 
-Support files let you setup the environment in which steps will be run, and define step definitions.
-
-#### World
-
-*World* is a constructor function with utility properties, destined to be used in step definitions:
+**Note:** The World constructor was made strictly synchronous in *[v0.8.0](https://github.com/cucumber/cucumber-js/releases/tag/v0.8.0)*.
 
 ```javascript
 // features/support/world.js
-var zombie = require('zombie');
-function World() {
-  this.browser = new zombie(); // this.browser will be available in step definitions
 
-  this.visit = function (url, callback) {
-    this.browser.visit(url, callback);
-  };
+var seleniumWebdriver = require('selenium-webdriver');
+
+function World() {
+  this.driver = new seleniumWebdriver.Builder()
+    .forBrowser('firefox')
+    .build();
+
+  // Returns a promise that resolves to the element
+  this.getElement = function(locator) {
+    var condition = seleniumWebdriver.until.elementLocated(locator);
+    return this.driver.wait(condition)
+  }
 }
 
 module.exports = function() {
@@ -91,87 +95,72 @@ module.exports = function() {
 };
 ```
 
-If you need to perform operations before/after every scenario, use [hooks](#hooks).
-
-**Breaking Change:** The World constructor is now strictly synchronous and does not receive a callback from Cucumber anymore... This is a breaking change that was introduced in release *[v0.8.0](https://github.com/cucumber/cucumber-js/releases/tag/v0.8.0)*
-
-#### Step definitions
-
-Step definitions are the glue between features written in Gherkin and the actual system under test. They are written in JavaScript.
-
-All step definitions will run with `this` set to what is known as the *[World](https://github.com/cucumber/cucumber/wiki/A-Whole-New-World)* in Cucumber. It's an object exposing useful methods, helpers and variables to your step definitions. A new instance of `World` is created before each scenario.
-
-Step definitions are contained within one or more wrapper functions.
-
-Those wrappers are run before executing the feature suite. `this` is an object holding important properties like the `Given()`, `When()` and `Then()` functions. Another notable property is `World`; it contains a default `World` constructor that can be either extended or replaced.
-
-Step definitions are run when steps match their name. `this` is an instance of `World`.
+Step definitions are the glue between features written in Gherkin and the
+actual system under test.
 
 ``` javascript
 // features/step_definitions/my_step_definitions.js
 
+var seleniumWebdriver = require('selenium-webdriver');
+
 module.exports = function () {
-  this.Given(/^I am on the Cucumber.js GitHub repository$/, function (callback) {
-    // Express the regexp above with the code you wish you had.
-    // `this` is set to a World instance.
-    // i.e. you may use this.browser to execute the step:
-
-    this.visit('https://github.com/cucumber/cucumber-js', callback);
-
-    // The callback is passed to visit() so that when the job's finished, the next step can
-    // be executed by Cucumber.
+  this.Given(/^I am on the Cucumber.js GitHub repository$/, function () {
+    return this.driver.get('https://github.com/cucumber/cucumber-js');
   });
 
-  this.When(/^I go to the README file$/, function (callback) {
-    // Express the regexp above with the code you wish you had. Call callback() at the end
-    // of the step, or callback(null, 'pending') if the step is not yet implemented:
-
-    callback(null, 'pending');
+  this.When(/^I go to the README file$/, function () {
+    return this.getElement({linkText: 'README.md'}).then(function(element) {
+      return element.click();
+    });
   });
 
-  this.Then(/^I should see "(.*)" as the page title$/, function (title, callback) {
-    // matching groups are passed as parameters to the step definition
-
-    var pageTitle = this.browser.text('title');
-    if (title === pageTitle) {
-      callback();
-    } else {
-      callback(new Error("Expected to be on page with title " + title));
-    }
+  this.Then(/^I should see "(.*)" in the page title$/, function (title) {
+    var condition = seleniumWebdriver.until.titleContains(title);
+    return this.driver.wait(condition);
   });
 };
 ```
 
-##### Promises
+#### Step definitions
 
-Instead of Node.js-style callbacks, promises can be returned by step definitions:
+Steps can be be synchronous or asynchronous.
+Asynchronous steps can either accept a callback as an additional parameter or return a promise.
 
-``` javascript
+```javascript
+// Synchronous
+this.Then(/^Then the response status is (.*)$/, function (status) {
+  assert.equal(this.responseStatus, status)
+});
+
+// Asynchronous - callback
+this.Then(/^Then the file named (.*) is empty$/, function (fileName, callback) {
+  fs.readFile(fileName, 'utf8', function(error, contents) {
+    if (error) {
+      callback(error);
+    } else {
+      asset.equal(contents, '');
+      callback();
+    }
+  });
+});
+
+// Asynchronous - promise
 this.Given(/^I am on the Cucumber.js GitHub repository$/, function () {
-  // Notice how `callback` is omitted from the parameters
-  return this.visit('https://github.com/cucumber/cucumber-js');
-
-  // A promise, returned by zombie.js's `visit` method is returned to Cucumber.
+  return this.driver.get('https://github.com/cucumber/cucumber-js');
 });
 ```
 
-Simply omit the last `callback` parameter and return the promise.
+##### Pending steps
 
-If the promise resolves to the string `'pending'`, the step will be marked as pending.
+* A synchronous step can be marked as pending
+if it returns the string `'pending'`
 
-##### Synchronous step definitions
+* An asynchronous callback step can be marked as pending
+if it executes its callback with the arguments `null, 'pending'`
 
-Often, asynchronous behaviour is not needed in step definitions. Simply omit the callback parameter, do not return anything and Cucumber will treat the step definition function as synchronous:
+* An asynchronous promise step can be marked as pending
+if it returns a promise that resolves to `'pending'`
 
-``` javascript
-this.Given(/^I add one cucumber$/, function () {
-  // Notice how `callback` is omitted from the parameters
-  this.cucumberCount += 1;
-});
-
-```
-
-If the step returns the string `'pending'`, the step will be marked as pending.
 
 ##### Strings instead of regular expressions
 
