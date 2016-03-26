@@ -5,7 +5,8 @@
 All support files that export a function will be
 called with a context that exposes the following methods:
 
-**this.defineStep([options,] pattern, code)**
+#### this.defineStep([options,] pattern, code)
+
 Defines a step. *Aliases: this.Given, this.When, this.Then*
 
 * `options` - object with the following keys
@@ -18,12 +19,14 @@ Defines a step. *Aliases: this.Given, this.When, this.Then*
 
 ---
 
-**this.setDefaultTimeout(milliseconds)**
+#### this.setDefaultTimeout(milliseconds)
+
 Set the default timeout for asynchronous steps. Default is 5000 milliseconds
 
 ---
 
-**this.Before([options,] code)**
+#### this.Before([options,] code)
+
 Defines a before hook which is run before each scenario.
 
 * `options` - object with the following keys
@@ -35,12 +38,14 @@ Defines a before hook which is run before each scenario.
 
 ---
 
-**this.After([options,] code)**
+#### this.After([options,] code)
+
 Defines an after hook which is run before each scenario. Same interface as before hooks.
 
 ---
 
-**this.World**
+#### this.World
+
 Set to a custom world constructor to override the default (`function () {}`).
 
 **Note:** The World constructor was made strictly synchronous in *[v0.8.0](https://github.com/cucumber/cucumber-js/releases/tag/v0.8.0)*.

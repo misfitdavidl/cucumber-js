@@ -3,7 +3,7 @@
 *World* is an isolated context for each scenario, exposed to the hooks and steps as `this`.
 The default world constructor is: `function World () {}` and be overriden.
 
-```
+```javascript
 var seleniumWebdriver = require('selenium-webdriver');
 
 function CustomWorld() {
