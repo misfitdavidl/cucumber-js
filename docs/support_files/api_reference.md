@@ -5,6 +5,8 @@
 All support files that export a function will be
 called with a context that exposes the following methods:
 
+---
+
 #### this.defineStep([options,] pattern, code)
 
 Defines a step. *Aliases: this.Given, this.When, this.Then*
@@ -21,13 +23,13 @@ Defines a step. *Aliases: this.Given, this.When, this.Then*
 
 #### this.setDefaultTimeout(milliseconds)
 
-Set the default timeout for asynchronous steps. Default is 5000 milliseconds
+Set the default timeout for asynchronous steps. Default is `5000` milliseconds.
 
 ---
 
 #### this.Before([options,] code)
 
-Defines a before hook which is run before each scenario.
+Defines a hook which is run before each scenario.
 
 * `options` - object with the following keys
   * `tags` - array of tags used to apply this hook to only specific scenarios
@@ -40,7 +42,7 @@ Defines a before hook which is run before each scenario.
 
 #### this.After([options,] code)
 
-Defines an after hook which is run before each scenario. Same interface as before hooks.
+Defines a hook which is run after each scenario. Same interface as *this.Before*.
 
 ---
 
