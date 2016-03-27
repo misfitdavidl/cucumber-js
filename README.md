@@ -409,7 +409,7 @@ this.After(function (scenario, callback) {
 ##### Lifecycle hooks
 
 For setup and teardown, unrelated to scenarios, you can use `BeforeAll` and `AfterAll` hooks.
-It can be used for tasks such as opening and closing your browser when running automated browser tests with [selenium](https://code.google.com/p/selenium/wiki/WebDriverJs) or [phantomjs](http://phantomjs.org/).
+It can be used for initializing resources that will be shared between scenarios, such as a browser.
 
 Like other hooks, it can use callbacks, return a promise, or be synchronous.
 Unlike other hooks, there is no world instance available.
@@ -418,20 +418,18 @@ Unlike other hooks, there is no world instance available.
 // features/support/lifecycle_hooks.js
 var myLifecycleHooks = function () {
   this.BeforeAll(function (callback) {
-    // initialize!
+    // initialize
     callback();
   });
 
   this.AfterAll(function (callback) {
-    // clean up!
+    // clean up
     callback();
   });
 }
 
 module.exports = myLifecycleHooks;
 ```
-
-If a lifecycle hook throws an error, it is output to `stderr`, and the process immediately exits with status 1.
 
 ### CLI
 
