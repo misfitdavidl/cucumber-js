@@ -1,4 +1,4 @@
-Feature: After hook interface
+Feature: Lifecycle hooks
 
   BeforeAll and AfterAll hooks are run just once,
   at the beginning and end of the suite
