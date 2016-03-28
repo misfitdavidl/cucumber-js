@@ -17,7 +17,7 @@ Feature: Lifecycle hooks
       """
       module.exports = {value: 0};
       """
-    And a file named "features/support/lifecycle_hooks.js" with:
+    And a file named "features/step_definitions/my_steps.js" with:
       """
       var assert = require('assert');
       var counter = require('../support/counter');
@@ -32,7 +32,7 @@ Feature: Lifecycle hooks
       """
 
   Scenario: success
-    Given a file named "features/step_definitions/my_steps.js" with:
+    Given a file named "features/support/lifecycle_hooks.js" with:
       """
       var assert = require('assert');
       var counter = require('../support/counter')
@@ -50,80 +50,85 @@ Feature: Lifecycle hooks
       module.exports = lifecycleHooks
       """
     When I run cucumber.js
-    Then the exit status should be 0
+    Then it outputs this text:
+      """
+      Feature: a feature
+
+        Scenario: first
+          Given a step
+
+        Scenario: second
+          Given a step
+
+      2 scenarios (2 passed)
+      2 steps (2 passed)
+      <duration-stat>
+      """
 
   Scenario: before all hook failure
-    Given a file named "features/my_feature.feature" with:
+    Given a file named "features/support/lifecycle_hooks.js" with:
       """
-      Feature: a feature
-        Scenario: first
-          Given a step
-
-        Scenario: second
-          Given a step
-      """
-    And a file named "features/step_definitions/my_steps.js" with:
-      """
-      stepDefinitions = function() {
+      var stepDefinitions = function() {
         this.BeforeAll(function() {
-          throw new Error('error in before all hook');
+          throw 'error in before all hook';
         });
-
-        this.When(/^a step$/, function () {});
       };
 
       module.exports = stepDefinitions
       """
     When I run cucumber.js
-    Then the exit status should be 1
-    And the output contains the text:
+    Then the output contains the text:
       """
       Failures:
 
       1) Step: Before All
-         Step Definition: features/step_definitions/my_steps.js:5
+         Step Definition: features/support/lifecycle_hooks.js:2
          Message:
            error in before all hook
 
-      1 scenario (1 failed)
-      1 step (1 skipped)
+      0 scenarios
+      0 steps
       <duration-stat>
       """
+    And the exit status should be 1
 
   Scenario: after all hook failure
-    Given a file named "features/my_feature.feature" with:
+    Given a file named "features/support/lifecycle_hooks.js" with:
       """
-      Feature: a feature
-        Scenario: first
-          Given a step
+      var counter = require('../support/counter');
 
-        Scenario: second
-          Given a step
-      """
-    And a file named "features/step_definitions/my_steps.js" with:
-      """
-      stepDefinitions = function() {
+      var stepDefinitions = function() {
         this.BeforeAll(function() {
-          throw new Error('error in before all hook');
+          counter.value = 1
         });
 
-        this.When(/^a step$/, function () {});
+        this.AfterAll(function() {
+          throw 'error in after all hook';
+        });
       };
 
       module.exports = stepDefinitions
       """
     When I run cucumber.js
-    Then the exit status should be 1
-    And the output contains the text:
+    Then the output contains the text:
       """
+      Feature: a feature
+
+        Scenario: first
+          Given a step
+
+        Scenario: second
+          Given a step
+
       Failures:
 
-      1) Step: Before All
-         Step Definition: features/step_definitions/my_steps.js:5
+      1) Step: After All
+         Step Definition: features/support/lifecycle_hooks.js:8
          Message:
-           error in before all hook
+           error in after all hook
 
-      1 scenario (1 failed)
-      1 step (1 skipped)
+      2 scenarios (2 passed)
+      2 steps (2 passed)
       <duration-stat>
       """
+    And the exit status should be 1
