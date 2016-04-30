@@ -3,50 +3,44 @@
 [![Build Status](https://travis-ci.org/cucumber/cucumber-js.svg?branch=master)](https://travis-ci.org/cucumber/cucumber-js)
 [![Dependencies](https://david-dm.org/cucumber/cucumber-js.svg)](https://david-dm.org/cucumber/cucumber-js)
 [![Code Climate](https://codeclimate.com/github/cucumber/cucumber-js.svg)](https://codeclimate.com/github/cucumber/cucumber-js)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cucumber/cucumber-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*Cucumber*, the [popular Behaviour-Driven Development tool](https://cucumber.io), brought to your JavaScript stack.
+[Cucumber](https://cucumber.io) is a tool for running automated tests written in plain language. Because they're
+written in plain language, they can be read by anyone on your team. Because they can be
+read by anyone, you can use them to help improve communication, collaboration and trust on
+your team.
 
-It runs on both Node.js and *modern* web browsers.
+Cucumber.js is the JavaScript implementation of Cucumber and runs on both Node.js and *modern* web browsers.
 
-## Prerequisites
+## Try it now
 
-* [Node.js](https://nodejs.org) or [io.js](https://iojs.org)
-* [NPM](https://www.npmjs.com)
+We've put a demo of Cucumber.js to [run in your browser](http://cucumber.github.io/cucumber-js/). Why don't you give it a try before anything else?
 
-Cucumber.js is tested on:
+## Help & support
 
-* Node.js 5, 4, 0.12, 0.10, and io.js (see [CI builds](https://travis-ci.org/cucumber/cucumber-js))
-* Google Chrome
-* Firefox
-* Safari
-* Opera
+* Chat: [Gitter](https://gitter.im/cucumber/cucumber-js)
+* Google Groups: [cukes](https://groups.google.com/group/cukes)
+* Website: [cucumber.io](https://cucumber.io)
+* Twitter: [@cucumberbdd](https://twitter.com/cucumberbdd/)
 
-To see an example of `cucumber-js` in a browser:
+## Contributing
 
-* clone the repository
-* `$ npm install`
-* `$ node example/server.js`
-* visit `http://localhost:9797`
+See [CONTRIBUTING.md](CONTRIBUTING.md) for info on contributing to Cucumber.js.
 
-## Usage
+## Install
 
-### Install
+### Node
 
 Cucumber.js is available as an npm module.
 
-Install globally with:
-
 ``` shell
-$ npm install -g cucumber
+$ npm install cucumber
 ```
 
-Install as a development dependency of your application with:
+### Browser
 
-``` shell
-$ npm install --save-dev cucumber
-```
+* Grab the latest browserified code from the [release](/release) folder
 
+## Usage
 
 ### Features
 
@@ -171,6 +165,16 @@ this.Given(/^I add one cucumber$/, function () {
 ```
 
 If the step returns the string `'pending'`, the step will be marked as pending.
+
+##### Generators (ES6)
+
+If your language supports generator functions, you can define step definitions with generator functions
+
+```javascript
+this.When(/^I add one cucumber$/, function *() {
+  this.cucumberCount += yield 1;
+});
+```
 
 ##### Strings instead of regular expressions
 
@@ -306,55 +310,35 @@ var myAfterHooks = function () {
 module.exports = myAfterHooks;
 ```
 
-##### Around hooks
-
-It's also possible to combine both before and after hooks in one single definition with the help of *around hooks*:
-
-```javascript
-// features/support/advanced_hooks.js
-
-myAroundHooks = function () {
-  this.Around(function (scenario, runScenario) {
-    // "this" is - as always - an instance of World promised to the scenario.
-
-    // First do the "before scenario" tasks:
-
-    this.bootFullTextSearchServer();
-    this.createSomeUsers();
-
-    // When the "before" duty is finished, tell Cucumber to execute the scenario
-    // and pass a function to be called when the scenario is finished:
-
-    // The first argument to runScenario is the error, if any, of the before tasks
-    // The second argument is a function which performs the after tasks
-    //   it can use callbacks, return a promise or be synchronous
-    runScenario(null, function () {
-      // Now, we can do our "after scenario" stuff:
-
-      this.emptyDatabase();
-      this.shutdownFullTextSearchServer();
-    });
-  });
-};
-
-module.exports = myAroundHooks;
-```
-
-As with `Before` and `After` hooks, `Around` hooks functions (both pre- and post-scenario functions) can accept a callback or return a promise if you need asynchronous operations.
-
 ##### Tagged hooks
 
-Hooks can be conditionally elected for execution based on the tags of the scenario.
+Hooks can be conditionally selected for execution based on the tags of the scenario.
 
 ``` javascript
 // features/support/hooks.js (this path is just a suggestion)
 
 var myHooks = function () {
-  this.Before("@foo", "@bar,@baz", function (scenario) {
+  this.Before({tags: ["@foo", "@bar,@baz"]}, function (scenario) {
     // This hook will be executed before scenarios tagged with @foo and either
     // @bar or @baz.
 
     // ...
+  });
+};
+
+module.exports = myHooks;
+```
+
+##### Hook timeouts
+
+Hooks timeout the same as steps and a specific hooks's timeout can be set with:
+
+```js
+// features/step_definitions/hooks.js
+
+var myHooks = function () {
+  this.Before({timeout: 60 * 1000}, function (scenario) {
+    // Does some slow initialization
   });
 };
 
@@ -528,21 +512,3 @@ In order to store and reuse commonly used CLI options, you can add a `cucumber.j
 * See the [JavaScript syntax](/lib/cucumber/support_code/step_definition_snippet_builder/javascript_syntax.js) for an example. Please open an issue if you need more information.
 * Please add the keywords `cucumber` and `snippets` to your package,
 so it can easily be found by searching [npm](https://www.npmjs.com/search?q=cucumber+snippets).
-
-### Examples
-
-A few example apps are available for you to browse:
-
-* [Rails app serving features in the browser](https://github.com/jbpros/cucumber-js-example)
-* [Express.js app running features in the cli](https://github.com/olivoil/NodeBDD)
-
-## Contribute
-
-See [CONTRIBUTING](https://github.com/cucumber/cucumber-js/blob/master/CONTRIBUTING.md).
-
-## Help & support
-
-* Twitter: [@cucumber_js](https://twitter.com/cucumber_js/)
-* IRC: [#cucumber](http://webchat.freenode.net?channels=cucumber&uio=d4) on Freenode
-* Google Groups: [cukes](https://groups.google.com/group/cukes)
-* Website: [cucumber.io](https://cucumber.io)

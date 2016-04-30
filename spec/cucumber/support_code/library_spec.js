@@ -42,43 +42,26 @@ describe("Cucumber.SupportCode.Library", function () {
           Cucumber.SupportCode.Hook.and.returnValue(hook);
         });
 
-        describe("with no tag groups", function () {
-          beforeEach(function (done) {
-            rawSupportCode = function() { this.Before(code); };
-            initializeLibrary(done);
+        describe("without options", function () {
+          beforeEach(function () {
+            supportCodeHelper.Before(code);
           });
 
           it("creates a before hook with the code", function () {
-            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {tags: []}, jasmine.any(String), jasmine.any(Number));
+            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {}, jasmine.any(String), jasmine.any(Number));
           });
         });
 
-        describe("with a tag group", function () {
-          var tagGroup;
+        describe("with options", function () {
+          var options;
 
-          beforeEach(function (done) {
-            tagGroup = createSpy("tag group");
-            rawSupportCode = function() { this.Before(tagGroup, code); };
-            initializeLibrary(done);
+          beforeEach(function () {
+            options = {some: 'data'};
+            supportCodeHelper.Before(options, code);
           });
 
           it("creates a before hook with the code", function () {
-            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {tags: [tagGroup]}, jasmine.any(String), jasmine.any(Number));
-          });
-        });
-
-        describe("with multiple tag groups", function () {
-          var tagGroup1, tagGroup2;
-
-          beforeEach(function (done) {
-            tagGroup1 = createSpy("tag group 1");
-            tagGroup2 = createSpy("tag group 2");
-            rawSupportCode = function() { this.Before(tagGroup1, tagGroup2, code); };
-            initializeLibrary(done);
-          });
-
-          it("creates a before hook with the code", function () {
-            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {tags: [tagGroup1, tagGroup2]}, jasmine.any(String), jasmine.any(Number));
+            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, options, jasmine.any(String), jasmine.any(Number));
           });
         });
 
@@ -122,43 +105,26 @@ describe("Cucumber.SupportCode.Library", function () {
           Cucumber.SupportCode.Hook.and.returnValue(hook);
         });
 
-        describe("with no tag groups", function () {
-          beforeEach(function (done) {
-            rawSupportCode = function() { this.After(code); };
-            initializeLibrary(done);
+        describe("without options", function () {
+          beforeEach(function () {
+            supportCodeHelper.After(code);
           });
 
           it("creates a before hook with the code", function () {
-            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {tags: []}, jasmine.any(String), jasmine.any(Number));
+            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {}, jasmine.any(String), jasmine.any(Number));
           });
         });
 
         describe("with a tag group", function () {
-          var tagGroup;
+          var options;
 
-          beforeEach(function (done) {
-            tagGroup = createSpy("tag group");
-            rawSupportCode = function() { this.After(tagGroup, code); };
-            initializeLibrary(done);
+          beforeEach(function () {
+            options = {some: 'data'};
+            supportCodeHelper.After(options, code);
           });
 
           it("creates a before hook with the code", function () {
-            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {tags: [tagGroup]}, jasmine.any(String), jasmine.any(Number));
-          });
-        });
-
-        describe("with multiple tag groups", function () {
-          var tagGroup1, tagGroup2;
-
-          beforeEach(function (done) {
-            tagGroup1 = createSpy("tag group 1");
-            tagGroup2 = createSpy("tag group 2");
-            rawSupportCode = function() { this.After(tagGroup1, tagGroup2, code); };
-            initializeLibrary(done);
-          });
-
-          it("creates a before hook with the code", function () {
-            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, {tags: [tagGroup1, tagGroup2]}, jasmine.any(String), jasmine.any(Number));
+            expect(Cucumber.SupportCode.Hook).toHaveBeenCalledWith(code, options, jasmine.any(String), jasmine.any(Number));
           });
         });
 
