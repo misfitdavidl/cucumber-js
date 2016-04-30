@@ -3,19 +3,42 @@
 [![Build Status](https://travis-ci.org/cucumber/cucumber-js.svg?branch=master)](https://travis-ci.org/cucumber/cucumber-js)
 [![Dependencies](https://david-dm.org/cucumber/cucumber-js.svg)](https://david-dm.org/cucumber/cucumber-js)
 [![Code Climate](https://codeclimate.com/github/cucumber/cucumber-js.svg)](https://codeclimate.com/github/cucumber/cucumber-js)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cucumber/cucumber-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[Cucumber](https://cucumber.io), the popular Behaviour-Driven Development tool,
-brought to your JavaScript stack. It runs on Node.js (5, 4, 0.12, 0.10, and io.js)
-and *modern* web browsers. See an example in your [browser](http://cucumber.github.io/cucumber-js/).
+[Cucumber](https://cucumber.io) is a tool for running automated tests written in plain language. Because they're
+written in plain language, they can be read by anyone on your team. Because they can be
+read by anyone, you can use them to help improve communication, collaboration and trust on
+your team.
 
-## Installation
+Cucumber.js is the JavaScript implementation of Cucumber and runs on both Node.js and *modern* web browsers.
 
-```shell
+## Try it now
+
+We've put a demo of Cucumber.js to [run in your browser](http://cucumber.github.io/cucumber-js/). Why don't you give it a try before anything else?
+
+## Help & support
+
+* Chat: [Gitter](https://gitter.im/cucumber/cucumber-js)
+* Google Groups: [cukes](https://groups.google.com/group/cukes)
+* Website: [cucumber.io](https://cucumber.io)
+* Twitter: [@cucumberbdd](https://twitter.com/cucumberbdd/)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for info on contributing to Cucumber.js.
+
+## Install
+
+### Node
+
+Cucumber.js is available as an npm module.
+
+``` shell
 $ npm install cucumber
 ```
 
-Or grab a copy from the [release](/release) directory
+### Browser
+
+* Grab the latest browserified code from the [release](/release) folder
 
 ## Documentation
 
@@ -29,14 +52,3 @@ Or grab a copy from the [release](/release) directory
   * [Attachments](/docs/support_files/attachments.md)
   * [String patterns](/docs/support_files/string_patterns.md)
   * [API Reference](/docs/support_files/api_reference.md)
-
-## Contribute
-
-See [CONTRIBUTING](https://github.com/cucumber/cucumber-js/blob/master/CONTRIBUTING.md).
-
-## Help & support
-
-* Twitter: [@cucumber_js](https://twitter.com/cucumber_js/)
-* IRC: [#cucumber](http://webchat.freenode.net?channels=cucumber&uio=d4) on Freenode
-* Google Groups: [cukes](https://groups.google.com/group/cukes)
-* Website: [cucumber.io](https://cucumber.io)
